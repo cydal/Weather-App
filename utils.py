@@ -8,8 +8,8 @@ import requests
 
 
 
-def set_latlon(lat, lon, side1):
-    with side1:
+def set_latlon(lat, lon, layout):
+    with layout:
         lat, lon = float(lat), float(lon)
 
         m = folium.Map(location=[lat, lon], zoom_start=16)
@@ -57,7 +57,7 @@ def get_data(dataset, lat, lon):
   return(df)
 
 
-def get_all_data(datasets, , lat, lon):
+def get_all_data(datasets, lat, lon):
   all_data = []
 
   for dataset in datasets:
