@@ -1,7 +1,20 @@
 import streamlit as st
+from streamlit_folium import folium_static
 import pandas as pd
 import numpy as np
+import folium
+import urllib.parse
+import requests
 
+from utils import * 
+
+
+header = st.beta_container()
+with header:
+    st.title('Weather App')
+    st.text('Enter Location to begin')
+
+side1, side2, side3, side4 = st.beta_columns(4)
 
 
 calendar = st.sidebar.date_input('Pick a date')
@@ -10,16 +23,24 @@ lat = st.sidebar.text_input('Latitude')
 lon = st.sidebar.text_input('Longitude')
 
 
+if st.sidebar.button("Use Lat & Lon"):
+    set_latlon(lat, lon, side1)
 
-side1, side2 = st.beta_columns(2)
-header = st.beta_container()
+st.sidebar.text('OR')
 
-with header:
-    st.title('Advanced bestest Weather Forecast')
+address = st.sidebar.text_input('Address')
 
-with side1:
-    st.header('Advanced bestest Weather Forecast')
+if st.sidebar.button("Use address"):
+    url = 'https://nominatim.openstreetmap.org/search/' + urllib.parse.quote(address) +'?format=json'
+    response = requests.get(url).json()
+    lat, lon = response[0]["lat"], response[0]["lon"]
+    set_latlon(lat, lon, side1)
+
 
 with side2:
-    st.header('Advanced bestest Weather Forecast2')
+    st.text(calendar)
+
+
+with side3:
+    st.header(date)
 
