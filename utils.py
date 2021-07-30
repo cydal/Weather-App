@@ -63,3 +63,51 @@ def get_all_data(datasets, lat, lon):
   for dataset in datasets:
     all_data.append(get_data(dataset, lat, lon))
   return(all_data)
+
+
+
+def rain_classifier(value):
+
+  if value == 0:
+    return("No rain in the last hour")
+
+  elif value > 0 and value<=0.05:
+    return("It's drizzling a, an umbrella won't be a bad idea")
+
+  elif value > 0.5 and value<=0.1:
+    return("A light rain, you should go out with an umbrella")
+
+  elif value > 0.1 and value<=0.3:
+    return("Rain's quite heavy")
+
+  else:
+    return("Very heavy downpour, hope you are indoors")
+
+
+def chance_of_flood(value):
+  if value>0.1:
+    return("There's a chance of flood")
+  else:
+    return("Little chance of flood")
+
+
+def get_specific(query, all_data):
+
+  for i, df_name in enumerate(datasets):
+    df = all_data[i]
+    if i == 4 or i == 5:
+      query_d = pd.to_datetime(query).replace(second=0, microsecond=0, minute=0, hour=0)
+      return_value = df["value"][df["date_time"] == query_d]
+      if return_value.empty:
+        return_value = "Data Not available"
+      else:
+        return_value = return_value.item()
+    else:
+      query_d = pd.to_datetime(query).replace(second=0, microsecond=0, minute=0)
+      return_value = df["value"][df["date_time"].dt.tz_convert(None) == query_d]
+      if return_value.empty:
+        return_value = "Data Not available"
+      else:
+        return_value = return_value.item()
+
+    returns[df_name] = return_value
